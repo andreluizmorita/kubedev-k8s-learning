@@ -15,14 +15,14 @@ const metricsMiddleware = promBundle({
   includeMethod: true,
   includePath: true,
   customLabels: {
-    project_version: "2.0",
+    project_version: "3.0",
   },
 });
 
 app.use(metricsMiddleware);
 app.use(config.middlewares.healthMid);
 app.use("/", config.routers);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
