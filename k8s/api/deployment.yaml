@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: andremorita/kubernets-api:v2
+          image: andremorita/k8s-api-product:latest
           ports:
             - containerPort: 8080
           env: 
