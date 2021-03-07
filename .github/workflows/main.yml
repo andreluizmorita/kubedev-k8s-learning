@@ -13,8 +13,8 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
+  # This workflow contains a single job called "CI"
+  CI:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -43,6 +43,33 @@ jobs:
             andremorita/k8s-api-product:latest
             andremorita/k8s-api-product:${{ github.run_number }}
           push: true
-            
+  CD:
+    needs: [CI]
+    
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses: actions/checkout@v2
       
+      - name: Config Kubernetes Context
+        uses: Azure/k8s-set-context@v1
+        with:
+          kubeconfig: ${{ secrets.K8S_CONFIG }
+          
+      - name: Deploy to Kubernetes MongoDB
+        uses: Azure/k8s-deploy@v1.3
+        with:
+          manifests: |
+            k8s/mongodb/deployment.yaml
+            k8s/mongodb/service.yaml
+            
+      - name: Deploy to Kubernetes API
+        uses: Azure/k8s-deploy@v1.3
+        with:
+          manifests: |
+            k8s/api/deployment.yaml
+            k8s/api/service.yaml
+          
       
